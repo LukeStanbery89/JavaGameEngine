@@ -1,9 +1,16 @@
 package com.lukestanbery.rain;
 
 import javax.swing.JFrame;
+
+import com.lukestanbery.rain.graphics.Screen;
+
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -17,9 +24,16 @@ public class Game extends Canvas implements Runnable {
 	private JFrame frame;
 	private boolean running = false;
 	
+	private Screen screen;
+	
+	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	
 	public Game(){
 		Dimension size = new Dimension(width * scale, height * scale);
 		setPreferredSize(size);
+		
+		screen = new Screen(width, height);
 		
 		frame = new JFrame();
 	}
@@ -27,7 +41,7 @@ public class Game extends Canvas implements Runnable {
 	public synchronized void start(){
 		running = true;
 		thread = new Thread(this, "Display");
-		thread.start();
+		thread.start();									// This is where the run() method is called
 	}
 
 	public synchronized void stop(){
@@ -51,12 +65,25 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	public void render(){
-		// TODO: Finish the render() method
 		BufferStrategy bs = getBufferStrategy();
 		if(bs == null){
 			createBufferStrategy(3);
 			return;
 		}
+
+		screen.clear();
+		screen.render();
+		
+		for(int i = 0; i < pixels.length; i++){
+			pixels[i] = screen.pixels[i];
+		}
+		
+		Graphics g = bs.getDrawGraphics();			// Create graphics
+		/** Handle Graphics here - MUST STAY IN THIS ORDER **/
+		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+		/** Done with graphics **/
+		g.dispose();								// Dispose of graphics after we're done with them
+		bs.show();									// Shows the buffer strategy
 	}
 	
 	public static void main(String[] args){
