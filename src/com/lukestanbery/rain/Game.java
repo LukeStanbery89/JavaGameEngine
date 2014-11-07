@@ -13,19 +13,23 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 public class Game extends Canvas implements Runnable {
-	
 	private static final long serialVersionUID = 1L;
+
+	// Constants
+	final int FRAMES_PER_SECOND = 60;
 	
-	public static int width = 300;
-	public static int height = width / 16 * 9;
-	public static int scale = 3;
+	// Declare/initialize variables
+	public static int width = 300,
+					  height = width / 16 * 9,
+					  scale = 3;
+	
+	public static String title = "Rain";
 	
 	private Thread thread;
 	private JFrame frame;
 	private boolean running = false;
 	
 	private Screen screen;
-	
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 	
@@ -54,10 +58,33 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void run() {
+		long lastTime = System.nanoTime(),
+			 timer = System.currentTimeMillis();
+		final double ns = 1000000000.0 / (double)FRAMES_PER_SECOND;
+		double delta = 0;
+		int frames = 0,		// Used for counting frames/updates per second
+			updates = 0;
+		
 		while(running){
-			update();
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			
+			while(delta >= 1){
+				update();
+				updates++;
+				delta--;
+			}
 			render();
+			frames++;
+			
+			if(System.currentTimeMillis() - timer > 1000){
+				timer += 1000;
+				frame.setTitle(title + " | " + updates + " ups, " + frames + " fps");
+				updates = frames = 0;
+			}
 		}
+		stop();
 	}
 	
 	public void update(){
@@ -89,7 +116,7 @@ public class Game extends Canvas implements Runnable {
 	public static void main(String[] args){
 		Game game = new Game();
 		game.frame.setResizable(false);								// Window cannot be resized
-		game.frame.setTitle("Rain");								// Sets title of the window
+		game.frame.setTitle(Game.title);							// Sets title of the window
 		game.frame.add(game);										// Adds the game object to the window
 		game.frame.pack();											// Sets window size to preferred size
 		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	// Close application when the window is closed
