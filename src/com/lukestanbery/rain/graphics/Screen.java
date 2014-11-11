@@ -5,7 +5,9 @@ import java.util.Random;
 public class Screen {
 
 	private final int TILE_SIZE = 16,
-					  MAP_SIZE = 64;
+					  TILE_MASK = (int)Math.sqrt(TILE_SIZE),
+					  MAP_SIZE = 64,
+					  MAP_SIZE_MASK = MAP_SIZE - 1;
 	
 	private int width, 
 			    height;
@@ -19,7 +21,7 @@ public class Screen {
 		this.height = height;
 		pixels = new int[width * height];
 		
-		for(int i = 0; i < 64*64; i++){
+		for(int i = 0; i < MAP_SIZE * MAP_SIZE; i++){
 			tiles[i] = random.nextInt(0xffffff);
 		}
 	}
@@ -30,14 +32,14 @@ public class Screen {
 		}
 	}
 	
-	public void render(){
+	public void render(int xOffset, int yOffset){
 		for(int y = 0; y < height; y++){
-			int yy = y;
-			if(yy < 0 || yy >= height) break;
+			int yy = y + yOffset;
+			//if(yy < 0 || yy >= height) break;
 			for(int x = 0; x < width; x++){
-				int xx = x;
-				if(xx < 0 || xx >= width) break;
-				int tileIndex = (xx >> (int)Math.sqrt(TILE_SIZE)) + (yy >> (int)Math.sqrt(TILE_SIZE)) * MAP_SIZE;	// Used bitwise operators for performance boost
+				int xx = x + xOffset;
+				//if(xx < 0 || xx >= width) break;
+				int tileIndex = (xx >> TILE_MASK & MAP_SIZE_MASK) + (yy >> TILE_MASK & MAP_SIZE_MASK) * MAP_SIZE;	// Used bitwise operators for performance boost
 				pixels[x + (y * width)] = tiles[tileIndex];		// Draw tile color
 			}
 		}
