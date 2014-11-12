@@ -40,7 +40,7 @@ public class Screen {
 				int xx = x + xOffset;
 				//if(xx < 0 || xx >= width) break;
 				int tileIndex = (xx >> TILE_MASK & MAP_SIZE_MASK) + (yy >> TILE_MASK & MAP_SIZE_MASK) * MAP_SIZE;	// Used bitwise operators for performance boost
-				pixels[x + (y * width)] = tiles[tileIndex];		// Draw tile color
+				pixels[x + (y * width)] = Sprite.grass.pixels[(x & 15) + (y & 15) * Sprite.grass.SIZE];
 			}
 		}
 	}
