@@ -67,6 +67,7 @@ public class Game extends Canvas implements Runnable {
 		double delta = 0;
 		int frames = 0,		// Used for counting frames/updates per second
 			updates = 0;
+		requestFocus();
 		
 		while(running){
 			long now = System.nanoTime();
