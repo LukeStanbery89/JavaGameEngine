@@ -6,51 +6,65 @@ import com.lukestanbery.rain.level.tile.Tile;
 
 public class Screen {
 
-	private final int TILE_SIZE = 16,
-					  TILE_MASK = (int)Math.sqrt(TILE_SIZE),
-					  MAP_SIZE = 64,
-					  MAP_SIZE_MASK = MAP_SIZE - 1;
-	
-	public int width, 
-			   height,
-			   xOffset,
-			   yOffset;
-	public int[] pixels,
-				 tiles = new int[MAP_SIZE * MAP_SIZE];
-	
+	private final int TILE_SIZE = 16, TILE_MASK = (int) Math.sqrt(TILE_SIZE), MAP_SIZE = 64, MAP_SIZE_MASK = MAP_SIZE - 1;
+
+	public int width, height, xOffset, yOffset, transparentColor = 0xffff00ff;
+	public int[] pixels, tiles = new int[MAP_SIZE * MAP_SIZE];
+
 	private Random random = new Random();
-	
-	public Screen(int width, int height){
+
+	public Screen(int width, int height) {
 		this.width = width;
 		this.height = height;
 		pixels = new int[width * height];
-		
-		for(int i = 0; i < MAP_SIZE * MAP_SIZE; i++){
+
+		for (int i = 0; i < MAP_SIZE * MAP_SIZE; i++) {
 			tiles[i] = random.nextInt(0xffffff);
 		}
 	}
-	
-	public void clear(){
-		for(int i = 0; i < pixels.length; i++){
+
+	public void clear() {
+		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = 0x000000;
 		}
 	}
-	
-	public void renderTile(int xp, int yp, Tile tile){
+
+	public void renderTile(int xp, int yp, Tile tile) {
 		xp -= xOffset;
 		yp -= yOffset;
-		for(int y = 0; y < tile.sprite.SIZE; y++){
+		for (int y = 0; y < tile.sprite.SIZE; y++) {
 			int ya = y + yp;
-			for(int x = 0; x < tile.sprite.SIZE; x++){
+			for (int x = 0; x < tile.sprite.SIZE; x++) {
 				int xa = x + xp;
-				if(xa < -tile.sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
-				if(xa < 0) xa = 0;
+				if (xa < -tile.sprite.SIZE || xa >= width || ya < 0 || ya >= height)
+					break;
+				if (xa < 0)
+					xa = 0;
 				pixels[xa + ya * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
 			}
 		}
 	}
-	
-	public void setOffset(int xOffset, int yOffset){
+
+	public void renderPlayer(int xp, int yp, Sprite sprite) {
+		xp -= xOffset;
+		yp -= yOffset;
+		for (int y = 0; y < sprite.SIZE; y++) {
+			int ya = y + yp;
+			for (int x = 0; x < sprite.SIZE; x++) {
+				int xa = x + xp;
+				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height)
+					break;
+				if (xa < 0)
+					xa = 0;
+				int col = sprite.pixels[x + y * sprite.SIZE];
+				if (col != transparentColor) {
+					pixels[xa + ya * width] = sprite.pixels[x + y * sprite.SIZE];
+				}
+			}
+		}
+	}
+
+	public void setOffset(int xOffset, int yOffset) {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
