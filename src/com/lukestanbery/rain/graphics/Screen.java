@@ -45,21 +45,21 @@ public class Screen {
 		}
 	}
 
-	public void renderPlayer(int xp, int yp, Sprite sprite) {
+	public void renderPlayer(int xp, int yp, Sprite sprite, boolean xFlip, boolean yFlip) {
 		xp -= xOffset;
 		yp -= yOffset;
 		for (int y = 0; y < sprite.SIZE; y++) {
 			int ya = y + yp;
+			int ys = y; // used for flipping sprites
+			if (yFlip) ys = sprite.SIZE - 1 - y;
 			for (int x = 0; x < sprite.SIZE; x++) {
 				int xa = x + xp;
-				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height)
-					break;
-				if (xa < 0)
-					xa = 0;
-				int col = sprite.pixels[x + y * sprite.SIZE];
-				if (col != transparentColor) {
-					pixels[xa + ya * width] = sprite.pixels[x + y * sprite.SIZE];
-				}
+				int xs = x; // used for flipping sprites
+				if (xFlip) xs = sprite.SIZE - 1 - x;
+				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
+				if (xa < 0) xa = 0;
+				int col = sprite.pixels[xs + ys * sprite.SIZE];
+				if (col != transparentColor) pixels[xa + ya * width] = col;
 			}
 		}
 	}
