@@ -9,19 +9,22 @@ import com.lukestanbery.rain.level.tile.Tile;
 
 public class SpawnLevel extends Level {
 
-	private Tile[] tiles;
 	private int[] levelPixels;
 
 	public SpawnLevel(String path) {
 		super(path);
 	}
 
-	protected void LoadLevel(String path) {
+	protected void loadLevel(String path) {
 		try {
+			System.out.println("Opening file.");
 			BufferedImage image = ImageIO.read(SpawnLevel.class.getResource(path));
+			System.out.println("Setting height and width.");
 			int w = image.getWidth();
 			int h = image.getHeight();
 			tiles = new Tile[w * h];
+			levelPixels = new int[w * h];
+			System.out.println("Setting levelPixels.");
 			image.getRGB(0, 0, w, h, levelPixels, 0, w);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -29,16 +32,16 @@ public class SpawnLevel extends Level {
 		}
 	}
 
-	// Grass = 0xFF00
-	// Flower = 0xFFFF00
-	// Rock = 0X7F7F00
+	// Grass = 0xff00ff00
+	// Flower = 0xffff00
+	// Rock = 0X7f7f00
 	protected void generateLevel() {
 		for (int i = 0; i < levelPixels.length; i++) {
-			if (levelPixels[i] == 0Xff00) {
+			if (levelPixels[i] == 0xff00ff00) {
 				tiles[i] = Tile.grass;
-			} else if (levelPixels[i] == 0xffff00) {
+			} else if (levelPixels[i] == 0xffffff00) {
 				tiles[i] = Tile.flower;
-			} else if (levelPixels[i] == 0x7f7f00) {
+			} else if (levelPixels[i] == 0xff7f7f00) {
 				tiles[i] = Tile.rock;
 			}
 		}
