@@ -13,7 +13,7 @@ import com.lukestanbery.rain.entity.mob.Player;
 import com.lukestanbery.rain.graphics.Screen;
 import com.lukestanbery.rain.input.Keyboard;
 import com.lukestanbery.rain.level.Level;
-import com.lukestanbery.rain.level.SpawnLevel;
+import com.lukestanbery.rain.level.TileCoordinate;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
@@ -44,10 +44,9 @@ public class Game extends Canvas implements Runnable {
 		screen = new Screen(width, height);
 		frame = new JFrame();
 		key = new Keyboard();
-		// level = new RandomLevel(64, 64);
-		level = new SpawnLevel("/textures/levels/level.png");
-		player = new Player(6 * 16, 4 * 16, key);
-
+		level = Level.spawn;
+		TileCoordinate playerSpawn = new TileCoordinate(19, 62);
+		player = new Player(playerSpawn.x(), playerSpawn.y(), key);
 		addKeyListener(key);
 	}
 
