@@ -1,8 +1,10 @@
 package com.lukestanbery.rain.entity.mob;
 
+import com.lukestanbery.rain.Game;
 import com.lukestanbery.rain.graphics.Screen;
 import com.lukestanbery.rain.graphics.Sprite;
 import com.lukestanbery.rain.input.Keyboard;
+import com.lukestanbery.rain.input.Mouse;
 
 public class Player extends Mob {
 
@@ -32,6 +34,7 @@ public class Player extends Mob {
 			anim = 0;
 		}
 
+		// Handle keyboard events
 		if (input.up)
 			ya--;
 		if (input.down)
@@ -41,11 +44,25 @@ public class Player extends Mob {
 		if (input.right)
 			xa++;
 
+		// Move
 		if (xa != 0 || ya != 0) {
 			move(xa, ya);
 			walking = true;
 		} else {
 			walking = false;
+		}
+
+		// Mouse events
+		updateShooting();
+	}
+
+	private void updateShooting() {
+		if (Mouse.getB() == 1) {
+			double dx = Mouse.getX() - Game.getWindowWidth() / 2;
+			double dy = Mouse.getY() - Game.getWindowHeight() / 2;
+			double dir = Math.atan2(dy, dx);
+
+			shoot(x, y, dir);
 		}
 	}
 

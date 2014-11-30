@@ -1,7 +1,9 @@
 package com.lukestanbery.rain;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -12,6 +14,7 @@ import javax.swing.JFrame;
 import com.lukestanbery.rain.entity.mob.Player;
 import com.lukestanbery.rain.graphics.Screen;
 import com.lukestanbery.rain.input.Keyboard;
+import com.lukestanbery.rain.input.Mouse;
 import com.lukestanbery.rain.level.Level;
 import com.lukestanbery.rain.level.TileCoordinate;
 
@@ -22,7 +25,7 @@ public class Game extends Canvas implements Runnable {
 	final int FRAMES_PER_SECOND = 60;
 
 	// Declare/initialize variables
-	public static int width = 300, height = width / 16 * 9, scale = 3;
+	private static int width = 300, height = width / 16 * 9, scale = 3;
 
 	public static String title = "Rain";
 
@@ -48,7 +51,20 @@ public class Game extends Canvas implements Runnable {
 		TileCoordinate playerSpawn = new TileCoordinate(19, 62);
 		player = new Player(playerSpawn.x(), playerSpawn.y(), key);
 		player.init(level);
+
 		addKeyListener(key);
+
+		Mouse mouse = new Mouse();
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
+	}
+
+	public static int getWindowWidth() {
+		return width * scale;
+	}
+
+	public static int getWindowHeight() {
+		return width * scale;
 	}
 
 	public synchronized void start() {
@@ -119,12 +135,13 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		Graphics g = bs.getDrawGraphics(); // Create graphics
-		/** Handle Graphics here - MUST STAY IN THIS ORDER **/
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-		// g.setColor(Color.WHITE);
-		// g.setFont(new Font("Verdana", 0, 50));
-		// g.drawString("X: " + player.x + ", Y: " + player.y, 450, 400);
-		/** Done with graphics **/
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Verdana", 0, 50));
+		// g.fillRect(Mouse.getX(), Mouse.getY(), 64, 64);
+		if (Mouse.getB() != -1) {
+			// g.drawString("Button: " + Mouse.getB(), 40, 80);
+		}
 		g.dispose(); // Dispose of graphics after we're done with them
 		bs.show(); // Shows the buffer strategy
 	}

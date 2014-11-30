@@ -35,6 +35,11 @@ public abstract class Mob extends Entity {
 
 	}
 
+	protected void shoot(int x, int y, double dir) {
+		dir = Math.toDegrees(dir);
+		System.out.println("Angle: " + dir);
+	}
+
 	private boolean collision(int xa, int ya) {
 		for (int c = 0; c < 4; c++) {
 			int xt = ((x + xa) + c % 2 * 14 - 7) / 16;
