@@ -2,8 +2,6 @@ package com.lukestanbery.rain.graphics;
 
 import java.util.Random;
 
-import com.lukestanbery.rain.level.tile.Tile;
-
 public class Screen {
 
 	private final int TILE_SIZE = 16, TILE_MASK = (int) Math.sqrt(TILE_SIZE), MAP_SIZE = 64, MAP_SIZE_MASK = MAP_SIZE - 1;
@@ -29,18 +27,18 @@ public class Screen {
 		}
 	}
 
-	public void renderTile(int xp, int yp, Tile tile) {
+	public void renderTile(int xp, int yp, Sprite sprite) {
 		xp -= xOffset;
 		yp -= yOffset;
-		for (int y = 0; y < tile.sprite.SIZE; y++) {
+		for (int y = 0; y < sprite.SIZE; y++) {
 			int ya = y + yp;
-			for (int x = 0; x < tile.sprite.SIZE; x++) {
+			for (int x = 0; x < sprite.SIZE; x++) {
 				int xa = x + xp;
-				if (xa < -tile.sprite.SIZE || xa >= width || ya < 0 || ya >= height)
+				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height)
 					break;
 				if (xa < 0)
 					xa = 0;
-				pixels[xa + ya * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+				pixels[xa + ya * width] = sprite.pixels[x + y * sprite.SIZE];
 			}
 		}
 	}
@@ -51,15 +49,20 @@ public class Screen {
 		for (int y = 0; y < sprite.SIZE; y++) {
 			int ya = y + yp;
 			int ys = y; // used for flipping sprites
-			if (yFlip) ys = sprite.SIZE - 1 - y;
+			if (yFlip)
+				ys = sprite.SIZE - 1 - y;
 			for (int x = 0; x < sprite.SIZE; x++) {
 				int xa = x + xp;
 				int xs = x; // used for flipping sprites
-				if (xFlip) xs = sprite.SIZE - 1 - x;
-				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
-				if (xa < 0) xa = 0;
+				if (xFlip)
+					xs = sprite.SIZE - 1 - x;
+				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height)
+					break;
+				if (xa < 0)
+					xa = 0;
 				int col = sprite.pixels[xs + ys * sprite.SIZE];
-				if (col != transparentColor) pixels[xa + ya * width] = col;
+				if (col != transparentColor)
+					pixels[xa + ya * width] = col;
 			}
 		}
 	}

@@ -11,7 +11,7 @@ public class SpawnWall2Tile extends Tile {
 	}
 
 	public void render(int x, int y, Screen screen) {
-		screen.renderTile(x << 4, y << 4, this); // "<< 4" = divide by 16
+		screen.renderTile(x << 4, y << 4, this.sprite); // "<< 4" = divide by 16
 	}
 
 	public boolean solid() {
