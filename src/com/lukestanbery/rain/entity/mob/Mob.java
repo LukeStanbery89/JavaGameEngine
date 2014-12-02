@@ -1,6 +1,8 @@
 package com.lukestanbery.rain.entity.mob;
 
 import com.lukestanbery.rain.entity.Entity;
+import com.lukestanbery.rain.entity.projectile.Projectile;
+import com.lukestanbery.rain.entity.projectile.WizardProjectile;
 import com.lukestanbery.rain.graphics.Sprite;
 
 public abstract class Mob extends Entity {
@@ -36,8 +38,8 @@ public abstract class Mob extends Entity {
 	}
 
 	protected void shoot(int x, int y, double dir) {
-		dir = Math.toDegrees(dir);
-		System.out.println("Angle: " + dir);
+		// dir = Math.toDegrees(dir);
+		Projectile p = new WizardProjectile(x, y, (int) dir);
 	}
 
 	private boolean collision(int xa, int ya) {
