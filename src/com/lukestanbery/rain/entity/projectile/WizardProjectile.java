@@ -11,7 +11,7 @@ public class WizardProjectile extends Projectile {
 		speed = 4;
 		damage = 20;
 		rateOfFire = 15;
-		sprite = Sprite.grass;
+		sprite = Sprite.projectileWizard;
 		nx = speed * Math.cos(angle);
 		ny = speed * Math.sin(angle);
 	}
